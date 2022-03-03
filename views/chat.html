@@ -208,6 +208,7 @@ img{ max-width:100%;}
                     </div>
                 </div>
                 <div class="mesgs">
+                    <p id="actif_tab" style="text-align: center"></p>
                     <div class="msg_history" id="msg_history">
                         <!-- <div class="incoming_msg">
                             <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
@@ -269,6 +270,9 @@ img{ max-width:100%;}
 
         getIfUserActive(customId);
 
+        document.getElementById("actif_tab").innerHTML = "Conversation with " + selectedInbox;
+
+
 
 
         var user = {
@@ -291,55 +295,54 @@ img{ max-width:100%;}
             });
 
             socket.on('receiveMesssage', (data) => {
+                // console.log("you man" + data.socketID + " " + socket.id);
+                if (data.customId == selectedInbox) {
+                    if (data.socketID != socket.id) {
+                        var container = document.getElementById('msg_history');
 
-                console.log("you man" + data.socketID + " " + socket.id);
-                if (data.socketID != socket.id) {
+                        var enfant1 = document.createElement('div');
+                        enfant1.setAttribute('class', 'incoming_msg');
 
-                    var container = document.getElementById('msg_history');
+                        var enfant2 = document.createElement('div');
+                        enfant2.setAttribute('class', 'incoming_msg_img');
 
-                    var enfant1 = document.createElement('div');
-                    enfant1.setAttribute('class', 'incoming_msg');
+                        var enfant2_1 = document.createElement('img');
+                        enfant2_1.setAttribute('src', './images/Image Johny.jpg');
+                        enfant2_1.setAttribute('alt', 'sunil');
 
-                    var enfant2 = document.createElement('div');
-                    enfant2.setAttribute('class', 'incoming_msg_img');
+                        var enfant3 = document.createElement('div');
+                        enfant3.setAttribute('class', 'received_msg');
 
-                    var enfant2_1 = document.createElement('img');
-                    enfant2_1.setAttribute('src', './images/Image Johny.jpg');
-                    enfant2_1.setAttribute('alt', 'sunil');
-
-                    var enfant3 = document.createElement('div');
-                    enfant3.setAttribute('class', 'received_msg');
-
-                    var enfant3_1 = document.createElement('div');
-                    enfant3_1.setAttribute('class', 'received_withd_msg');
+                        var enfant3_1 = document.createElement('div');
+                        enfant3_1.setAttribute('class', 'received_withd_msg');
 
 
-                    var enfant3_1_1 = document.createElement('p');
-                    enfant3_1_1.innerHTML = data.message;
+                        var enfant3_1_1 = document.createElement('p');
+                        enfant3_1_1.innerHTML = data.message;
 
-                    var enfant3_1_2 = document.createElement('span');
-                    enfant3_1_2.setAttribute('class', 'time_date');
-                    enfant3_1_2.innerHTML = new Date();
+                        var enfant3_1_2 = document.createElement('span');
+                        enfant3_1_2.setAttribute('class', 'time_date');
+                        enfant3_1_2.innerHTML = new Date();
 
-                    container.appendChild(enfant1);
+                        container.appendChild(enfant1);
 
-                    enfant1.appendChild(enfant2);
+                        enfant1.appendChild(enfant2);
 
-                    enfant2.appendChild(enfant2_1);
+                        enfant2.appendChild(enfant2_1);
 
-                    enfant1.appendChild(enfant3);
+                        enfant1.appendChild(enfant3);
 
-                    enfant3.appendChild(enfant3_1);
+                        enfant3.appendChild(enfant3_1);
 
-                    enfant3_1.appendChild(enfant3_1_1);
+                        enfant3_1.appendChild(enfant3_1_1);
 
-                    enfant3_1.appendChild(enfant3_1_2);
-                    document.getElementById("chat_ib").children[1].innerHTML = data.customId + ": " + data.message;
-                } else {
-                    document.getElementById("chat_ib").children[1].innerHTML = "Vous: " + data.message;
+                        enfant3_1.appendChild(enfant3_1_2);
+                        document.getElementById("chat_ib").children[1].innerHTML = data.customId + ": " + data.message;
+                    } else {
+                        document.getElementById("chat_ib").children[1].innerHTML = "Vous: " + data.message;
 
+                    }
                 }
-
                 document.getElementById("write_msg").value = "";
             });
         })
@@ -368,6 +371,8 @@ img{ max-width:100%;}
             container.appendChild(enfant0);
 
             socket.emit("sendMessage", { message: document.getElementById("write_msg").value, socketId: socket.id, customId: customId, recepteurId: selectedInbox });
+            document.getElementById("write_msg").value = "";
+            
         }
         function getAllMessage(id, dest) {
             var container = document.getElementById('msg_history');
@@ -458,6 +463,8 @@ img{ max-width:100%;}
         }
 
         function changeTabChat(id, dest) {
+
+            document.getElementById("actif_tab").innerHTML = "Conversation with " + selectedInbox;
 
             // alert(id);
             selectedInbox = dest;
