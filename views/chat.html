@@ -260,21 +260,18 @@ img{ max-width:100%;}
 
         let selectedInbox = dest;
 
-        let url_api = "https://chattiliiagency.herokuapp.com/";
-        // let url_api = "http://localhost/";
+        // let url_api = "https://chattiliiagency.herokuapp.com/";
+        let url_api = "http://localhost:3000/";
 
-        $("#recepteurId").val(dest);
+        // $("#recepteurId").val(dest);
 
-        // getAllMessage(customId, dest);
 
         displayInboxChat(customId);
 
         getIfUserActive(customId);
 
+
         // document.getElementById("actif_tab").innerHTML = "Conversation with " + selectedInbox;
-
-
-
 
         var user = {
             id: customId,
@@ -373,7 +370,7 @@ img{ max-width:100%;}
 
             socket.emit("sendMessage", { message: document.getElementById("write_msg").value, socketId: socket.id, customId: customId, recepteurId: selectedInbox });
             document.getElementById("write_msg").value = "";
-            
+
         }
         function getAllMessage(id, dest) {
             var container = document.getElementById('msg_history');
@@ -464,13 +461,17 @@ img{ max-width:100%;}
         }
 
         function changeTabChat(id, dest) {
+            document.getElementById("actif_tab").innerHTML = "Conversation with " + dest;
 
-            document.getElementById("actif_tab").innerHTML = "Conversation with " + selectedInbox;
+
+            $(".chat_list").attr('class', 'chat_list');
 
             // alert(id);
             selectedInbox = dest;
 
-            getAllMessage(id, selectedInbox);
+            getAllMessage(id, dest);
+
+            document.getElementById("" + dest).className = "chat_list active_chat";
 
             // document.getElementById("inbox_chat").appendChild = '<div class="chat_list active_chat" onclick="changeTabChat()"><div class="chat_people"><div class="chat_img"> <img src="./images/Image Johny.jpg" alt="sunil"></div><div class="chat_ib" id="chat_ib"><h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5><p>Test, which is a new approach to have all solutions astrology under one roofeee.</p></div></div></div>';
 
@@ -486,7 +487,8 @@ img{ max-width:100%;}
                             result.message.forEach(element => {
                                 element.conversation.forEach(cov => {
                                     if (cov != id) {
-                                        $(".inbox_chat").append('<div class="chat_list" onclick="changeTabChat(' + id + ',' + cov + ')"><div class="chat_people"><div class="chat_img"> <img src="./images/Image Johny.jpg" alt="sunil"></div><div class="chat_ib" id="chat_ib"><h5>' + cov + '<span class="chat_date">' + element.updatedAt._seconds + '</span></h5><p>Test, which is a new approach to have all solutions astrology under one roofeee.</p></div></div></div>');
+                                        $(".inbox_chat").append('<div class="chat_list" id=' + cov + '><div class="chat_people"><div class="chat_img"> <img src="./images/Image Johny.jpg" alt="sunil"></div><div class="chat_ib" id="chat_ib"><h5>' + cov + '<span class="chat_date">' + element.updatedAt._seconds + '</span></h5><p>Test, which is a new approach to have all solutions astrology under one roofeee.</p></div></div></div>');
+                                        $('#' + cov).attr('onclick', 'changeTabChat("' + id + '","' + cov + '")')
                                     } else {
                                         // $(".inbox_chat").append('<div class="chat_list" onclick="changeTabChat(' + id + ',' + cov + ')"><div class="chat_people"><div class="chat_img"> <img src="./images/Image Johny.jpg" alt="sunil"></div><div class="chat_ib" id="chat_ib"><h5>' + cov + '<span class="chat_date">' + element.updatedAt._seconds + '</span></h5><p>Test, which is a new approach to have all solutions astrology under one roofeee.</p></div></div></div>');
                                     }
@@ -495,6 +497,14 @@ img{ max-width:100%;}
                         } else {
                             $(".inbox_chat").append('<div style="text-align: center; padding: 20px; font-size: bold">No message</div>');
                         }
+
+                        if (dest == "") {
+                            document.getElementById("actif_tab").innerHTML = "Select one message in inbox";
+                        } else {
+                            document.getElementById("actif_tab").innerHTML = "Conversation with " + selectedInbox;
+                            changeTabChat(customId, dest);
+                        }
+
                         // console.log(result);
                     },
                     error: function (err) {
