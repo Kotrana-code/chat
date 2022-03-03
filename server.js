@@ -5,6 +5,11 @@ var app = require("./app");
 
 var moment = require("moment");
 
+var message = require("./controller/message");
+
+var db = require("./config/config");
+
+
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
@@ -46,6 +51,7 @@ io.on('connection', function (socket) {
         clientInfo.customId = data.customId;
         clientInfo.clientId = socket.id;
         clients.push(clientInfo);
+
     });
 
     console.log("Un utilisateur connected");
@@ -60,12 +66,14 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on('sendMessage', function (data) {
+    socket.on('sendMessage', async function (data) {
         for (var i = 0, len = clients.length; i < len; ++i) {
             var c = clients[i];
-            if (c.customId == data.customId) {
-                // io.to(c.clientId).emit("receiveMesssage", data);
-                io.emit("receiveMesssage", data);
+            // console.log("i = " + i + "customId " + c.customId + "==" + data.customId + " " + c.clientId)
+            console.log(data.socketId + " " + data.recepteurId + " " + data.message + " " + moment().format());
+            if (c.customId == data.recepteurId) {
+                await db.collection('messages').add({ participant: [data.customId, data.recepteurId.toString()], message: data.message, createdAt: moment().format() });
+                io.to(c.clientId).emit("receiveMesssage", data);
                 break;
             }
         }
