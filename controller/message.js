@@ -3,8 +3,13 @@ var moment = require('moment'); // require
 
 
 
-exports.addMessage = async () => {
-    res.send({ Ok: "deba" });
+exports.addInbox = async (req, res) => {
+    let body = req.body;
+    try {
+        await db.collection('inbox').add(body);
+    } catch (error) {
+
+    }
 }
 
 
@@ -94,3 +99,5 @@ exports.getInbox = async (req, res) => {
         });
     }
 }
+
+

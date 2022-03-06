@@ -12,4 +12,6 @@ router.get('/get_if_user_active/:id',  message.getIfUserActive);
 
 router.get('/get_inbox/:id',  message.getInbox);
 
+router.post('/add/inbox', message.addInbox);
+
 module.exports = router;

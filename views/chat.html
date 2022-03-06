@@ -260,8 +260,8 @@ img{ max-width:100%;}
 
         let selectedInbox = dest;
 
-        let url_api = "https://chattiliiagency.herokuapp.com/";
-        // let url_api = "http://localhost:3000/";
+        // let url_api = "https://chattiliiagency.herokuapp.com/";
+        let url_api = "http://localhost:3000/";
 
         // $("#recepteurId").val(dest);
 
@@ -494,16 +494,17 @@ img{ max-width:100%;}
                                     }
                                 });
                             });
+                            if (dest == null || dest == "") {
+                                document.getElementById("actif_tab").innerHTML = "Select one message in inbox";
+                            } else {
+                                document.getElementById("actif_tab").innerHTML = "Conversation with " + selectedInbox;
+                                changeTabChat(customId, dest);
+                            }
                         } else {
                             $(".inbox_chat").append('<div style="text-align: center; padding: 20px; font-size: bold">No message</div>');
                         }
 
-                        if (dest == "") {
-                            document.getElementById("actif_tab").innerHTML = "Select one message in inbox";
-                        } else {
-                            document.getElementById("actif_tab").innerHTML = "Conversation with " + selectedInbox;
-                            changeTabChat(customId, dest);
-                        }
+
 
                         // console.log(result);
                     },
