@@ -294,7 +294,7 @@ img{ max-width:100%;}
             });
 
             socket.on('receiveMesssage', (data) => {
-                // console.log("you man" + data.socketID + " " + socket.id);
+                console.log("you man" + data.socketID + " " + socket.id);
                 if (data.customId == selectedInbox) {
                     if (data.socketID != socket.id) {
                         var container = document.getElementById('msg_history');
@@ -336,11 +336,18 @@ img{ max-width:100%;}
                         enfant3_1.appendChild(enfant3_1_1);
 
                         enfant3_1.appendChild(enfant3_1_2);
-                        document.getElementById("chat_ib").children[1].innerHTML = data.customId + ": " + data.message;
-                    } else {
-                        document.getElementById("chat_ib").children[1].innerHTML = "Vous: " + data.message;
+                        // alert('oks');
+                        // document.getElementById("chat_ib" + data.customId).children[1].innerHTML = "Vous: " + data.message;
 
+                        document.getElementById("chat_ib" + data.customId).children[1].innerHTML = data.customId + ": " + data.message;
+                    } else {
+                        // alert('ok');
+                        document.getElementById("chat_ib" + data.customId).children[1].innerHTML = "Vous: " + data.message;
                     }
+                } else {
+                    // alert("okay");
+                    document.getElementById("chat_ib" + data.customId).children[1].innerHTML = data.customId + ": " + data.message;
+
                 }
                 document.getElementById("write_msg").value = "";
             });
@@ -368,6 +375,9 @@ img{ max-width:100%;}
             enfant1.appendChild(enfant1_2);
 
             container.appendChild(enfant0);
+
+            document.getElementById("chat_ib" + selectedInbox).children[1].innerHTML = "Vous: " + document.getElementById("write_msg").value;
+
 
             socket.emit("sendMessage", { message: document.getElementById("write_msg").value, socketId: socket.id, customId: customId, recepteurId: selectedInbox });
             document.getElementById("write_msg").value = "";
@@ -488,7 +498,7 @@ img{ max-width:100%;}
                             result.message.forEach(element => {
                                 element.conversation.forEach(cov => {
                                     if (cov != id) {
-                                        $(".inbox_chat").append('<div class="chat_list" id=' + cov + '><div class="chat_people"><div class="chat_img"> <img src="./images/Image Johny.jpg" alt="sunil"></div><div class="chat_ib" id="chat_ib"><h5>' + cov + '<span class="chat_date">' + element.updatedAt + '</span></h5><p>Test, which is a new approach to have all solutions astrology under one roofeee.</p></div></div></div>');
+                                        $(".inbox_chat").append('<div class="chat_list" id=' + cov + '><div class="chat_people"><div class="chat_img"> <img src="./images/Image Johny.jpg" alt="sunil"></div><div class="chat_ib" id="chat_ib' + cov + '"><h5>' + cov + '<span class="chat_date">' + element.updatedAt + '</span></h5><p>Test, which is a new approach to have all solutions astrology under one roofeee.</p></div></div></div>');
                                         $('#' + cov).attr('onclick', 'changeTabChat("' + id + '","' + cov + '")')
                                     } else {
                                         // $(".inbox_chat").append('<div class="chat_list" onclick="changeTabChat(' + id + ',' + cov + ')"><div class="chat_people"><div class="chat_img"> <img src="./images/Image Johny.jpg" alt="sunil"></div><div class="chat_ib" id="chat_ib"><h5>' + cov + '<span class="chat_date">' + element.updatedAt._seconds + '</span></h5><p>Test, which is a new approach to have all solutions astrology under one roofeee.</p></div></div></div>');
