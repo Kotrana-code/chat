@@ -339,7 +339,7 @@ img{ max-width:100%;}
 
                         enfant3_1.appendChild(enfant3_1_2);
 
-                        document.getElementById("chat_ib" + data.customId).children[1].innerHTML = data.customId + ": " + data.message;
+                        document.getElementById("chat_ib" + data.customId).children[1].innerHTML = data.message;
                         document.getElementById("chat_ib" + data.customId).children[1].setAttribute('style', 'font-weight: bold')
                     } else {
                         document.getElementById("chat_ib" + data.customId).children[1].innerHTML = "Vous: " + data.message;
@@ -347,7 +347,7 @@ img{ max-width:100%;}
                 } else {
                     document.getElementById("chat_ib" + data.customId).children[1].setAttribute('style', 'font-weight: bold')
 
-                    document.getElementById("chat_ib" + data.customId).children[1].innerHTML = data.customId + ": " + data.message;
+                    document.getElementById("chat_ib" + data.customId).children[1].innerHTML = data.message;
 
                 }
                 document.getElementById("write_msg").value = "";
