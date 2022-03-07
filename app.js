@@ -9,6 +9,8 @@ var indexRouter = require('./routes/index');
 
 var app = express();
 
+
+
 //Cors
 app.use(cors());
 

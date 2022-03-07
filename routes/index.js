@@ -4,6 +4,7 @@ const path = require('path');
 var db = require("../config/config");
 
 var message_route_helper = require("./message_route_helper");
+var calendar_route = require("./calendar_route_helper");
 
 
 module.exports = app => {
@@ -14,5 +15,8 @@ module.exports = app => {
 
   //all route declared here
   app.use('/api', message_route_helper);
+
+  //all route declared here
+  app.use('/api/calendar', calendar_route);
 
 };
