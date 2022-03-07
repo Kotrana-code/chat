@@ -70,10 +70,15 @@ io.on('connection', function (socket) {
         for (var i = 0, len = clients.length; i < len; ++i) {
             var c = clients[i];
             // console.log("i = " + i + "customId " + c.customId + "==" + data.customId + " " + c.clientId)
-            console.log(data.socketId + " " + data.recepteurId + " " + data.message + " " + moment().format());
+            // console.log(data.socketId + " " + data.recepteurId + " " + data.message + " " + moment().format());
             if (c.customId == data.recepteurId) {
-                await db.collection('messages').add({ participant: [data.customId, data.recepteurId.toString()], message: data.message, createdAt: moment().format() });
-                io.to(c.clientId).emit("receiveMesssage", data);
+                await db.collection('messages').add({ participant: [data.customId, data.recepteurId.toString()], message: data.message, createdAt: moment().format() }).then((result) => {
+                    db.collection("inbox").doc(data.idDocument).update({ lastMessage: data.message , updatedAt: moment().format() });
+                    io.to(c.clientId).emit("receiveMesssage", data);
+                }).catch((err) => {
+
+                });
+
                 break;
             }
         }

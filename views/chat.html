@@ -260,6 +260,8 @@ img{ max-width:100%;}
 
         let selectedInbox = dest;
 
+        let idDocument = "";
+
         let url_api = "https://chattiliiagency.herokuapp.com/";
         // let url_api = "http://localhost:3000/";
 
@@ -340,12 +342,15 @@ img{ max-width:100%;}
                         // document.getElementById("chat_ib" + data.customId).children[1].innerHTML = "Vous: " + data.message;
 
                         document.getElementById("chat_ib" + data.customId).children[1].innerHTML = data.customId + ": " + data.message;
+                        document.getElementById("chat_ib" + data.customId).children[1].setAttribute('style', 'font-size: 40px')
                     } else {
                         // alert('ok');
                         document.getElementById("chat_ib" + data.customId).children[1].innerHTML = "Vous: " + data.message;
                     }
                 } else {
                     // alert("okay");
+                    document.getElementById("chat_ib" + data.customId).children[1].setAttribute('style', 'font-weight: bold')
+
                     document.getElementById("chat_ib" + data.customId).children[1].innerHTML = data.customId + ": " + data.message;
 
                 }
@@ -379,7 +384,7 @@ img{ max-width:100%;}
             document.getElementById("chat_ib" + selectedInbox).children[1].innerHTML = "Vous: " + document.getElementById("write_msg").value;
 
 
-            socket.emit("sendMessage", { message: document.getElementById("write_msg").value, socketId: socket.id, customId: customId, recepteurId: selectedInbox });
+            socket.emit("sendMessage", { message: document.getElementById("write_msg").value, socketId: socket.id, customId: customId, recepteurId: selectedInbox, idDocument: idDocument });
             document.getElementById("write_msg").value = "";
 
         }
@@ -471,11 +476,13 @@ img{ max-width:100%;}
                 });
         }
 
-        function changeTabChat(id, dest) {
+        function changeTabChat(id, dest, idDocuments) {
             document.getElementById("actif_tab").innerHTML = "Conversation with " + dest;
 
 
             $(".chat_list").attr('class', 'chat_list');
+
+            idDocument = idDocuments;
 
             // alert(id);
             selectedInbox = dest;
@@ -496,10 +503,13 @@ img{ max-width:100%;}
                     success: function (result) {
                         if (result.message.length > 0) {
                             result.message.forEach(element => {
+                                if ((element.conversation[0] == id || element.conversation[1] == id) && (element.conversation[0] == dest || element.conversation[1] == dest)) {
+                                    idDocument = element.id;
+                                }
                                 element.conversation.forEach(cov => {
                                     if (cov != id) {
-                                        $(".inbox_chat").append('<div class="chat_list" id=' + cov + '><div class="chat_people"><div class="chat_img"> <img src="./images/Image Johny.jpg" alt="sunil"></div><div class="chat_ib" id="chat_ib' + cov + '"><h5>' + cov + '<span class="chat_date">' + element.updatedAt + '</span></h5><p>Test, which is a new approach to have all solutions astrology under one roofeee.</p></div></div></div>');
-                                        $('#' + cov).attr('onclick', 'changeTabChat("' + id + '","' + cov + '")')
+                                        $(".inbox_chat").append('<div class="chat_list" id=' + cov + '><div class="chat_people"><div class="chat_img"> <img src="./images/Image Johny.jpg" alt="sunil"></div><div class="chat_ib" id="chat_ib' + cov + '"><h5>' + cov + '<span class="chat_date">' + element.updatedAt + '</span></h5><p>' + element.lastMessage + '</p></div></div></div>');
+                                        $('#' + cov).attr('onclick', 'changeTabChat("' + id + '","' + cov + '","' + element.id + '")')
                                     } else {
                                         // $(".inbox_chat").append('<div class="chat_list" onclick="changeTabChat(' + id + ',' + cov + ')"><div class="chat_people"><div class="chat_img"> <img src="./images/Image Johny.jpg" alt="sunil"></div><div class="chat_ib" id="chat_ib"><h5>' + cov + '<span class="chat_date">' + element.updatedAt._seconds + '</span></h5><p>Test, which is a new approach to have all solutions astrology under one roofeee.</p></div></div></div>');
                                     }
@@ -509,7 +519,7 @@ img{ max-width:100%;}
                                 document.getElementById("actif_tab").innerHTML = "Select one message in inbox";
                             } else {
                                 document.getElementById("actif_tab").innerHTML = "Conversation with " + selectedInbox;
-                                changeTabChat(customId, dest);
+                                changeTabChat(customId, dest, idDocument);
                             }
                         } else {
                             $(".inbox_chat").append('<div style="text-align: center; padding: 20px; font-size: bold">No message</div>');
