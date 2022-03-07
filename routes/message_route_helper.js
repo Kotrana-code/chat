@@ -4,7 +4,7 @@ var router = express.Router();
 var message = require("../controller/message");
 
 
-router.post('/add', message.addMessage);
+// router.post('/add', message.addMessage);
 
 router.get('/get_message/:id/:dest',  message.getMessage);
 
