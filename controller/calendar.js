@@ -107,19 +107,14 @@ function listEvents(auth) {
 
 
 function createAnEvent(auth,body, res){
+	
     const calendar = google.calendar({version: 'v3', auth});
     var event = {
     'summary': body.summary,
     // 'location': '800 Howard St., San Francisco, CA 94103',
     'description': body.description,
-    'start': {
-      'dateTime': '2022-03-07T09:00:00-07:00',
-      'timeZone': 'America/Los_Angeles',
-    },
-    'end': {
-      'dateTime': '2022-03-07T17:00:00-07:00',
-      'timeZone': 'America/Los_Angeles',
-    },
+    'start': body.start,
+    'end': body.end,
     'recurrence': [
       'RRULE:FREQ=DAILY;COUNT=2'
     ],
@@ -155,9 +150,10 @@ function createAnEvent(auth,body, res){
   }, function(err, event) {
     if (err) {
       console.log('There was an error contacting the Calendar service: ' + err);
+    	res.send({error: true, message: err.message});
       return;
     }
-    res.send({hangoutLink : event.data.hangoutLink , htmlLink : event.data.htmlLink});
+    res.send({error: false, hangoutLink : event.data.hangoutLink , htmlLink : event.data.htmlLink});
     console.log('Event created: %s', event.data.hangoutLink);
   });
 }
